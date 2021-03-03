@@ -16,5 +16,7 @@ module.exports = {
     sourceType: 'module'
   },
   rules: {
+	"no-useless-constructor": 0,
+  "no-unused-vars": 0
   }
 }

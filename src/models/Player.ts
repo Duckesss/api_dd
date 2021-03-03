@@ -1,5 +1,5 @@
 
-import { Schema, model, Document } from 'mongoose'
+import mongoose, { Schema, model, Document } from 'mongoose'
 import { Request } from 'express'
 
 const PlayerSchema = new Schema({
@@ -7,7 +7,10 @@ const PlayerSchema = new Schema({
     type: String,
     required: true
   },
-  login: {
+  token: {
+    type: String
+  },
+  username: {
     type: String,
     required: true
   },
@@ -17,6 +20,20 @@ const PlayerSchema = new Schema({
   },
   admin: {
     type: Boolean
+  },
+  character: {
+    type: {
+      breed: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Breed',
+        required: true
+      },
+      class: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Class',
+        required: true
+      }
+    }
   }
 }, {
   timestamps: true
@@ -24,14 +41,22 @@ const PlayerSchema = new Schema({
 
 interface PlayerModel extends Document{
   name:string;
-  login:string;
+  username:string;
   password:string;
   admin?:boolean;
+  token?:string;
 }
 
 interface PlayerCreateRequest extends Request{
   body: PlayerModel
 }
 
+interface LoginRequest extends Request{
+  body: {
+    username:string;
+    password:string;
+  }
+}
+
 export default model<PlayerModel>('Player', PlayerSchema)
-export { PlayerCreateRequest }
+export { PlayerCreateRequest, LoginRequest, PlayerModel }

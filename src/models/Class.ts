@@ -1,5 +1,5 @@
 
-import { Schema, model, Document } from 'mongoose'
+import mongoose, { Schema, model, Document } from 'mongoose'
 import { Request } from 'express'
 
 const ClassSchema = new Schema({
@@ -9,6 +9,11 @@ const ClassSchema = new Schema({
   },
   description: {
     type: String,
+    required: true
+  },
+  spells: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Spell',
     required: true
   }
 }, {

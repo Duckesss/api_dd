@@ -21,6 +21,7 @@
   "homepage": "https://github.com/Duckesss/api_dd#readme",
   "devDependencies": {
     "@types/express": "^4.17.11",
+    "@types/jsonwebtoken": "^8.5.0",
     "@types/mongoose": "^5.10.3",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",
@@ -40,6 +41,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "5.11.5"
   }
 }
