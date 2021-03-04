@@ -13,7 +13,7 @@ const SpellSchema = new Schema({
   },
   requirements: {
     type: String,
-    required: true
+    required: false
   },
   effect: {
     type: String,
@@ -26,7 +26,7 @@ const SpellSchema = new Schema({
 interface SpellModel extends Document{
   level:number;
   name:string;
-  requirements:string;
+  requirements?:string;
   effect:string;
 }
 
@@ -34,5 +34,11 @@ interface SpellCreateRequest extends Request{
   body: SpellModel
 }
 
+interface GetPaginated extends Request{
+  query:{
+    page: string;
+  }
+}
+
 export default model<SpellModel>('Spell', SpellSchema)
-export { SpellCreateRequest }
+export { SpellCreateRequest, SpellModel, GetPaginated }

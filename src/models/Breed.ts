@@ -10,16 +10,6 @@ const BreedSchema = new Schema({
   description: {
     type: String,
     required: true
-  },
-  subclasses: {
-    name: {
-      type: String,
-      required: true
-    },
-    description: {
-      type: String,
-      required: true
-    }
   }
 }, {
   timestamps: true
@@ -33,6 +23,11 @@ interface BreedModel extends Document{
 interface BreedCreateRequest extends Request{
   body: BreedModel
 }
+interface GetPaginated extends Request{
+  query:{
+    page: string;
+  }
+}
 
 export default model<BreedModel>('Breed', BreedSchema)
-export { BreedCreateRequest }
+export { BreedCreateRequest, BreedModel, GetPaginated }

@@ -1,6 +1,9 @@
 import { Router } from 'express'
 import Utils from '../Utils'
 import LoginController from '../controllers/LoginController'
+import SpellController from '../controllers/SpellController'
+import BreedController from '../controllers/BreedController'
+import ClassesController from '../controllers/ClassesController'
 const routes = Router()
 
 routes.get('/dice', (req, res) => {
@@ -14,8 +17,19 @@ routes.get('/ping', (req, res) => {
 })
 
 routes.get('/user/get', LoginController.get)
-
 routes.post('/user/login', LoginController.login)
 routes.post('/user/create', LoginController.create)
 
+routes.get('/spell/get', SpellController.getPaginated)
+routes.get('/spell/getAll', SpellController.getAll)
+routes.post('/spell/create', SpellController.create)
+
+routes.get('/breed/get', BreedController.getPaginated)
+routes.get('/breed/getAll', BreedController.getAll)
+routes.post('/breed/create', BreedController.create)
+
+routes.get('/classes/get', ClassesController.getPaginated)
+routes.get('/classes/getAll', ClassesController.getAll)
+routes.post('/classes/create', ClassesController.create)
+routes.post('/classes/edit', ClassesController.edit)
 export default routes
