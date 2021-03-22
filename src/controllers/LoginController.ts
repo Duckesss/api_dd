@@ -1,6 +1,6 @@
 import Player, { PlayerCreateRequest, LoginRequest, PlayerModel } from '../models/Player'
 import { Request, Response } from 'express'
-import Error from './ErrorController'
+import { Error, Success } from './ResponseController'
 import Oauth from './OauthController'
 
 /**
@@ -26,20 +26,17 @@ class LoginController {
       await Player.updateOne({ username, password }, {
         $set: { token }
       })
-      return res.status(200).json({
-        message: 'Usuario logado com sucesso',
-        token
-      })
+      return res.status(200).json(new Success({ token }, 'Usuario logado com sucesso'))
     } else {
-      return res.status(400).json(
-        new Error('Usuário não encontrado', 201)
+      return res.status(200).json(
+        new Success({}, 'Usuário não encontrado')
       )
     }
   }
 
   public async get (req: Request, res: Response) {
     const usuario = await getUser(req.params)
-    return res.status(200).json(usuario)
+    return res.status(200).json(new Success(usuario))
   }
 
   public async create (req: PlayerCreateRequest, res: Response) {
@@ -47,7 +44,7 @@ class LoginController {
     const parametrosObrigatorios = ['name', 'username', 'password']
     const keysEnviadas = Object.keys(req.body)
     const parametrosCorretos = parametrosObrigatorios
-      .every(param => keysEnviadas.includes(param))
+      .every(param => keysEnviadas.includes(param) && req.body[param])
     if (!parametrosCorretos) {
       return res.status(400).json(
         new Error(`Parâmetros Insuficientes, é necessário passar ${parametrosObrigatorios.join(',')}`, 203)
@@ -56,10 +53,10 @@ class LoginController {
     if (!(await exists({ username, password }))) {
       const novoPlayer = new Player(req.body)
       await novoPlayer.save()
-      return res.json(novoPlayer)
+      return res.json(new Success(novoPlayer))
     } else {
-      return res.status(400).json(
-        new Error('Usuário já existente', 202)
+      return res.json(
+        new Success({})
       )
     }
   }

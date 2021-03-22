@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import Spell, { SpellCreateRequest, GetPaginated } from '../models/Spell'
-import Error from './ErrorController'
+import { Error, Success } from './ResponseController'
 const pageSize = 50
 
 const exists = async function (params) : Promise<boolean> {
@@ -16,12 +16,12 @@ class SpellController {
       skip = pageSize * (Number(req.query.page) - 1)
     }
     const spells = await Spell.find({}).skip(skip).limit(limit)
-    return res.status(200).json(spells)
+    return res.json(new Success(spells))
   }
 
   public async getAll (req: Request, res: Response) {
     const spells = await Spell.find({})
-    return res.status(200).json(spells)
+    return res.json(new Success(spells))
   }
 
   public async create (req: SpellCreateRequest, res: Response) {
@@ -38,7 +38,7 @@ class SpellController {
     if (!(await exists({ level, name }))) {
       const novaSpell = new Spell(req.body)
       await novaSpell.save()
-      return res.json(novaSpell)
+      return res.json(new Success(novaSpell))
     } else {
       return res.status(400).json(
         new Error('Magia já existente', 205)

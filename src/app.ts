@@ -21,8 +21,6 @@ class App {
     private middlewares () {
       this.express.use(express.json())
       this.express.use(cors())
-      this.express.use(express.static('./src/static'))
-      // this.express.use(loggerMiddleware)
     }
 
     private routes () {

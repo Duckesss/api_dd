@@ -1,7 +1,6 @@
-import Breed, { BreedCreateRequest, BreedModel, GetPaginated } from '../models/Breed'
+import Breed, { BreedCreateRequest, GetPaginated } from '../models/Breed'
 import { Request, Response } from 'express'
-import Error from './ErrorController'
-import Oauth from './OauthController'
+import { Error, Success } from './ResponseController'
 const pageSize = 50
 
 /**
@@ -27,7 +26,7 @@ class BreedController {
     if (!(await exists({ name }))) {
       const novaRaca = new Breed(req.body)
       await novaRaca.save()
-      return res.json(novaRaca)
+      return res.json(new Success(novaRaca))
     } else {
       return res.status(400).json(
         new Error('Raça já existente', 207)
@@ -42,12 +41,12 @@ class BreedController {
       skip = pageSize * (Number(req.query.page) - 1)
     }
     const racas = await Breed.find({}).skip(skip).limit(limit)
-    return res.status(200).json(racas)
+    return res.status(200).json(new Success(racas))
   }
 
   public async getAll (req: Request, res: Response) {
     const racas = await Breed.find({})
-    return res.status(200).json(racas)
+    return res.status(200).json(new Success(racas))
   }
 }
 export default new BreedController()

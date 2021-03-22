@@ -1,7 +1,7 @@
-import Class, { ClassCreateRequest, ClassModel, GetPaginated } from '../models/Class'
+import Class, { ClassCreateRequest, GetPaginated } from '../models/Class'
 import Spell from '../models/Spell'
 import { Request, Response } from 'express'
-import Error from './ErrorController'
+import { Error, Success } from './ResponseController'
 import Oauth from './OauthController'
 const pageSize = 50
 
@@ -46,7 +46,7 @@ class ClassController {
       }
       const novaClasse = new Class({ ...req.body, spells })
       await novaClasse.save()
-      return res.json(novaClasse)
+      return res.json(new Success(novaClasse))
     } else {
       return res.status(400).json(
         new Error('Classe já existente', 209)
@@ -64,7 +64,7 @@ class ClassController {
         spells: await getSpells(req.body.spells)
       }
     }).populate('spells').exec()
-    return res.json(classeUpdated)
+    return res.json(new Success(classeUpdated))
   }
 
   public async getPaginated (req: GetPaginated, res: Response) {
@@ -74,12 +74,12 @@ class ClassController {
       skip = pageSize * (Number(req.query.page) - 1)
     }
     const classes = await Class.find({}).skip(skip).limit(limit).populate('spells').exec()
-    return res.status(200).json(classes)
+    return res.status(200).json(new Success(classes))
   }
 
   public async getAll (req: Request, res: Response) {
     const classes = await Class.find({}).populate('spells').exec()
-    return res.status(200).json(classes)
+    return res.status(200).json(new Success(classes))
   }
 }
 export default new ClassController()
