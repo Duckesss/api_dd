@@ -4,6 +4,7 @@ import LoginController from '../controllers/LoginController'
 import SpellController from '../controllers/SpellController'
 import BreedController from '../controllers/BreedController'
 import ClassesController from '../controllers/ClassesController'
+import CharacterController from '../controllers/CharacterController'
 const routes = Router()
 
 routes.get('/dice', (req, res) => {
@@ -32,4 +33,8 @@ routes.get('/classes/get', ClassesController.getPaginated)
 routes.get('/classes/getAll', ClassesController.getAll)
 routes.post('/classes/create', ClassesController.create)
 routes.post('/classes/edit', ClassesController.edit)
+
+routes.get('/characters/get', CharacterController.getAll)
+routes.post('/characters/create', CharacterController.create)
+routes.post('/characters/edit', CharacterController.edit)
 export default routes

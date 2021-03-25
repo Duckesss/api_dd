@@ -21,20 +21,11 @@ const PlayerSchema = new Schema({
   admin: {
     type: Boolean
   },
-  character: {
-    type: {
-      breed: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Breed',
-        required: true
-      },
-      class: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Class',
-        required: true
-      }
-    }
-  }
+  characters: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Character',
+    required: false
+  }]
 }, {
   timestamps: true
 })
@@ -45,6 +36,7 @@ interface PlayerModel extends Document{
   password:string;
   admin?:boolean;
   token?:string;
+  characters?:string[];
 }
 
 interface PlayerCreateRequest extends Request{

@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken'
 import Oauth from '../controllers/OauthController'
-import Error from '../controllers/ErrorController'
+import { Error } from '../controllers/ResponseController'
 import { Request, Response, NextFunction } from 'express'
 
 export default (req : Request, res : Response, next : NextFunction) : Response | void => {
