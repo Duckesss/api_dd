@@ -6,7 +6,7 @@ class Database {
   }
 
   private mongoConnect () {
-    const strConnection = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.ejos5.gcp.mongodb.net/dd_base?retryWrites=true&w=majority`
+    const strConnection = `mongodb+srv://${process.env.USUARIO}:${process.env.PASSWORD}@cluster0.ejos5.gcp.mongodb.net/dd_base?retryWrites=true&w=majority`
     mongoose.connect(strConnection, {
       useNewUrlParser: true,
       useUnifiedTopology: true
