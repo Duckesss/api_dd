@@ -39,6 +39,11 @@ class LoginController {
     return res.status(200).json(new Success(usuario))
   }
 
+  public async getAll (req: Request, res: Response) {
+    const usuarios = await Player.find({})
+    return res.status(200).json(new Success(usuarios))
+  }
+
   public async create (req: PlayerCreateRequest, res: Response) {
     const { username, password } = req.body
     const parametrosObrigatorios = ['name', 'username', 'password']
@@ -61,4 +66,6 @@ class LoginController {
     }
   }
 }
+
 export default new LoginController()
+export {exists, getUser}

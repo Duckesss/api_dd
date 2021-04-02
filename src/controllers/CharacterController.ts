@@ -1,9 +1,9 @@
 import Character, { CharacterCreateRequest } from '../models/Character'
 import Class from '../models/Class'
 import Breed from '../models/Breed'
+import Player from '../models/Player'
 import { Request, Response } from 'express'
 import { Error, Success } from './ResponseController'
-import Oauth from './OauthController'
 const pageSize = 50
 
 /**
@@ -43,11 +43,18 @@ class CharacterController {
       const characterBreed = await getBreed(req.body.breed)
       const newCharacter = new Character({
         ...req.body,
-        breed: characterClass,
-        class: characterBreed,
+        class: characterClass,
+        breed: characterBreed,
         level: 0
       })
       await newCharacter.save()
+      await Player.findOneAndUpdate({
+        token: req.headers.authorization
+      },{
+        $push:{
+          characters: newCharacter._id
+        }
+      })
       return res.json(new Success(newCharacter))
     } else {
       return res.status(400).json(
@@ -74,5 +81,21 @@ class CharacterController {
     const characters = await Character.find({}).populate('breed').populate('class').exec()
     return res.status(200).json(new Success(characters))
   }
+
+  public async get (req: Request, res: Response) {
+    const userData = await Player.findOne({
+      token: req.headers.authorization
+    },'characters')
+      .populate({
+        path: 'characters',
+        populate: [
+          {path: 'breed'},
+          {path: 'class'},
+        ]
+      })
+      .exec()
+    return res.status(200).json(new Success(userData))
+  }
 }
 export default new CharacterController()
+

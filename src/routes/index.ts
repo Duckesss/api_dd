@@ -5,6 +5,7 @@ import SpellController from '../controllers/SpellController'
 import BreedController from '../controllers/BreedController'
 import ClassesController from '../controllers/ClassesController'
 import CharacterController from '../controllers/CharacterController'
+import Oauth, {onlyAdmin} from '../middlewares/Oauth'
 const routes = Router()
 
 routes.get('/dice', (req, res) => {
@@ -18,6 +19,7 @@ routes.get('/ping', (req, res) => {
 })
 
 routes.get('/user/get', LoginController.get)
+routes.get('/user/getAll', LoginController.getAll)
 routes.post('/user/login', LoginController.login)
 routes.post('/user/create', LoginController.create)
 
@@ -34,7 +36,8 @@ routes.get('/classes/getAll', ClassesController.getAll)
 routes.post('/classes/create', ClassesController.create)
 routes.post('/classes/edit', ClassesController.edit)
 
-routes.get('/characters/get', CharacterController.getAll)
+routes.get('/characters/getAll', onlyAdmin,CharacterController.getAll)
+routes.get('/characters/get', CharacterController.get)
 routes.post('/characters/create', CharacterController.create)
 routes.post('/characters/edit', CharacterController.edit)
 export default routes
