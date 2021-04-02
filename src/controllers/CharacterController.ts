@@ -1,7 +1,6 @@
-import Character, { CharacterCreateRequest } from '../models/Character'
+import Player, { CharacterCreateRequest } from '../models/Player'
 import Class from '../models/Class'
 import Breed from '../models/Breed'
-import Player from '../models/Player'
 import { Request, Response } from 'express'
 import { Error, Success } from './ResponseController'
 const pageSize = 50
@@ -10,19 +9,21 @@ const pageSize = 50
  * Atributos private:
  */
 const exists = async function (params) : Promise<boolean> {
-  const encontrou = await Character.find(params)
+  const encontrou = await Player.find({
+    characters: params
+  })
   return encontrou.length > 0
 }
 
-const getClass = async function (className : string) : Promise<string[]> {
-  const achou = await Class.find({ name: className })
-  if (achou) return achou.map(e => e._id)
-  return undefined
+const getClass = async function (classID : string) : Promise<string> {
+  const achou = await Class.findOne({ _id: classID })
+  if (achou) return achou._id
+  return ''
 }
-const getBreed = async function (breedName : string) : Promise<string[]> {
-  const achou = await Breed.find({ name: breedName })
-  if (achou) return achou.map(e => e._id)
-  return undefined
+const getBreed = async function (breedID : string) : Promise<string> {
+  const achou = await Breed.findOne({ _id: breedID })
+  if (achou) return achou._id
+  return ''
 }
 
 class CharacterController {
@@ -41,21 +42,16 @@ class CharacterController {
     if (!(await exists({ name }))) {
       const characterClass = await getClass(req.body.class)
       const characterBreed = await getBreed(req.body.breed)
-      const newCharacter = new Character({
+      const player = await Player.findOne({ token: req.headers.authorization })
+      const newCharacter = {
         ...req.body,
         class: characterClass,
         breed: characterBreed,
         level: 0
-      })
-      await newCharacter.save()
-      await Player.findOneAndUpdate({
-        token: req.headers.authorization
-      },{
-        $push:{
-          characters: newCharacter._id
-        }
-      })
-      return res.json(new Success(newCharacter))
+      }
+      player.characters.push(newCharacter)
+      await player.save()
+      return res.json(new Success(player))
     } else {
       return res.status(400).json(
         new Error('Personagem já existente', 209)
@@ -65,7 +61,10 @@ class CharacterController {
 
   public async edit (req : Request, res: Response) {
     const { name } = req.body
-    const classeUpdated = await Character.findOneAndUpdate({ name }, {
+    const classeUpdated = await Player.findOneAndUpdate({
+      'characters.name': name,
+      token: req.headers.authorization
+    }, {
       returnNewDocument: true,
       useFindAndModify: true,
       $set: {
@@ -85,12 +84,12 @@ class CharacterController {
   public async get (req: Request, res: Response) {
     const userData = await Player.findOne({
       token: req.headers.authorization
-    },'characters')
+    }, 'characters')
       .populate({
         path: 'characters',
         populate: [
-          {path: 'breed'},
-          {path: 'class'},
+          { path: 'breed' },
+          { path: 'class' }
         ]
       })
       .exec()
@@ -98,4 +97,3 @@ class CharacterController {
   }
 }
 export default new CharacterController()
-

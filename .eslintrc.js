@@ -1,22 +1,18 @@
 module.exports = {
-  parser: '@typescript-eslint/parser',
   env: {
-    node: true,
+    browser: true,
     es2021: true
+  },
+  extends: [
+    'standard'
+  ],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 12
   },
   plugins: [
     '@typescript-eslint'
   ],
-  extends: [
-    'plugin:@typescript-eslint/recommended',
-    'standard'
-  ],
-  parserOptions: {
-    ecmaVersion: 12,
-    sourceType: 'module'
-  },
   rules: {
-	"no-useless-constructor": 0,
-  "no-unused-vars": 0
   }
 }

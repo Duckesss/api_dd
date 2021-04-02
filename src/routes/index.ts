@@ -37,7 +37,7 @@ routes.post('/classes/create', ClassesController.create)
 routes.post('/classes/edit', ClassesController.edit)
 
 routes.get('/characters/getAll', onlyAdmin,CharacterController.getAll)
-routes.get('/characters/get', CharacterController.get)
-routes.post('/characters/create', CharacterController.create)
+routes.get('/characters/get', Oauth, CharacterController.get)
+routes.post('/characters/create', Oauth, CharacterController.create)
 routes.post('/characters/edit', CharacterController.edit)
 export default routes

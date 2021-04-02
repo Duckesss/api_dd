@@ -1,4 +1,3 @@
-
 import mongoose, { Schema, model, Document } from 'mongoose'
 import { Request } from 'express'
 
@@ -22,13 +21,44 @@ const PlayerSchema = new Schema({
     type: Boolean
   },
   characters: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Character',
-    required: false
+    name: {
+      type: String,
+      required: true
+    },
+    class: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Class',
+      required: true
+    },
+    breed: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Breed',
+      required: true
+    },
+    level: {
+      type: Number,
+      required: true
+    },
+    items: [{
+      type: String,
+      required: false
+    }],
+    photo: {
+      type: String,
+      required: false
+    }
   }]
 }, {
   timestamps: true
 })
+
+interface CharacterModel{
+  name:string;
+  class: string;
+  breed: string;
+  level: number;
+  items?: string[];
+}
 
 interface PlayerModel extends Document{
   name:string;
@@ -36,7 +66,7 @@ interface PlayerModel extends Document{
   password:string;
   admin?:boolean;
   token?:string;
-  characters?:string[];
+  characters?:CharacterModel[];
 }
 
 interface PlayerCreateRequest extends Request{
@@ -50,5 +80,10 @@ interface LoginRequest extends Request{
   }
 }
 
+interface CharacterCreateRequest extends Request{
+  body: CharacterModel
+}
+
 export default model<PlayerModel>('Player', PlayerSchema)
 export { PlayerCreateRequest, LoginRequest, PlayerModel }
+export { CharacterCreateRequest, CharacterModel }
