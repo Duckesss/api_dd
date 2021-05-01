@@ -17,8 +17,9 @@ class Error {
 }
 
 class Utils {
-  private dice (faces : number) {
-    const resultado = Math.floor((Math.random() * 10) % faces + 1)
+  private dice (max : number) {
+    const min = 1
+    const resultado = Math.floor(Math.random() * (max - min + 1) + min);
     return resultado
   }
 
