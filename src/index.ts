@@ -1,14 +1,23 @@
+import * as dotenv from 'dotenv'
+dotenv.config({
+  path: './.env'
+})
 import app from './app'
 import * as appInfo from '../package.json'
-const PORT = 5000
+const PORT = process.env.PORT || 5000
 import { createServer } from "http";
-import { Server, Socket } from "socket.io";
-import Io from "./io_handler"
+import { Server } from "socket.io";
+import ioHandler from "./controllers/IoController";
+
 
 const httpServer = createServer(app);
+const io = new Server(httpServer,{
+  cors: {
+    origin: "*"
+  }
+})
 
-const io = new Io(httpServer)
-
+io.on('connection', socket => new ioHandler(socket))
 
 httpServer.listen(PORT, () => {
   console.log(`[${appInfo.version}] [${new Date().toLocaleString('pt-br')}] Server running on localhost:${PORT}`)

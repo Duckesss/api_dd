@@ -3,10 +3,6 @@ import routes from './routes'
 import Database from './database'
 // import{loggerMiddleware} from "./middlewares/Logger";
 import cors from 'cors'
-import * as dotenv from 'dotenv'
-dotenv.config({
-  path: './.env'
-})
 
 class App {
     private database
